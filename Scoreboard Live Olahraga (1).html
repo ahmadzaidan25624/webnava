@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Scoreboard Live Olahraga</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0e17;--cd:#141927;--tx:#eef0f6;--mu:#8d97ab;--bd:#252c40;--ac:#7c3aed;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f3f4f7;--cd:#fff;--tx:#14171c;--mu:#667085;--bd:#d9dde3}}
+:root[data-theme="light"]{--bg:#f3f4f7;--cd:#fff;--tx:#14171c;--mu:#667085;--bd:#d9dde3}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body.out{background:transparent;overflow:hidden}
+#ctl{max-width:1100px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:0}h2{font-size:15px;margin:0 0 10px}
+header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chip{font-size:12px;padding:3px 10px;border-radius:99px;border:1px solid var(--bd);color:var(--mu);margin-left:6px}.chip.ok{color:#16a34a;border-color:#16a34a}
+.card{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
+label{display:block;font-size:12px;color:var(--mu);margin:8px 0 3px}
+input,select,textarea,button{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:7px 10px}
+input,select,textarea{width:100%}input[type=color]{padding:2px;height:36px}input[type=file]{padding:5px}
+textarea{min-height:70px;resize:vertical}
+button,.btn{cursor:pointer;background:var(--cd);display:inline-block;text-decoration:none;font-size:14px;margin:2px}
+button:hover,.btn:hover{border-color:var(--ac)}button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+button.big{background:var(--ac);color:#fff;border-color:var(--ac)}
+.bs{font-size:44px;font-weight:700;text-align:center;line-height:1}
+.row2{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pv{position:relative;overflow:hidden;border-radius:10px;background:repeating-conic-gradient(#2b303b 0 25%,#222730 0 50%) 0 0/24px 24px}
+small{color:var(--mu)}
+.hero{text-align:center;padding:26px 10px 14px}
+.eb{display:inline-block;font-size:11px;letter-spacing:2px;padding:5px 14px;border-radius:99px;background:linear-gradient(90deg,#7c3aed33,#22c55e33);color:#c4b5fd}
+.hero h1{font-size:clamp(26px,5vw,44px);line-height:1.1;margin:14px auto 8px;max-width:760px}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,#a78bfa,#34d399);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:18px 0}
+.sg button{padding:16px 8px;border-radius:14px;margin:0}.sg button span{display:block;font-size:30px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:12px}
+.steps div{padding:14px;border:1px solid var(--bd);border-radius:12px;background:var(--cd)}.steps b{color:#a78bfa}
+#outwrap{position:fixed;inset:0}
+.stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;font-family:Oswald,'Arial Narrow',Arial,sans-serif;color:#fff;overflow:hidden}
+.sb{position:absolute;left:50%;top:40px;width:1200px;margin-left:-600px;transition:transform .7s cubic-bezier(.2,.9,.2,1),opacity .5s;animation:sin .9s cubic-bezier(.2,.9,.2,1)}
+.sb.out{transform:translateY(-220px);opacity:0}
+@keyframes sin{from{transform:translateY(-220px);opacity:0}to{transform:none;opacity:1}}
+.tour{width:max-content;max-width:100%;margin:0 auto;background:#fff;color:#0b0f1a;padding:5px 30px;border-radius:10px 10px 0 0;font-size:22px;letter-spacing:4px;text-transform:uppercase;font-weight:700}
+.row{display:flex;height:96px;border-radius:12px;overflow:hidden;background:linear-gradient(#18203a,#0a0e19);box-shadow:0 14px 34px #000a}
+.team{flex:1;min-width:0;display:flex;align-items:center;gap:14px}
+.team.a{flex-direction:row-reverse}
+.strip{width:12px;align-self:stretch;background:var(--c)}
+.logo{width:72px;height:72px;flex:none;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;color:#111;font-size:24px;font-weight:700;margin:0 4px}
+.logo img{width:100%;height:100%;object-fit:contain}
+.nm{flex:1;min-width:0;font-size:40px;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.team.a .nm{text-align:right}
+.sc{width:110px;align-self:stretch;display:flex;align-items:center;justify-content:center;background:var(--c);font-size:70px;font-weight:700}
+.sc .n{font-style:normal;display:block}
+.sc.pop{animation:fl .9s}.sc.pop .n{animation:pop .9s}
+@keyframes pop{0%{transform:scale(1)}30%{transform:scale(1.6) rotate(-4deg)}100%{transform:scale(1)}}
+@keyframes fl{0%{filter:brightness(2.4)}100%{filter:none}}
+.mid{width:230px;flex:none;background:#f5f6f8;color:#0b0f1a;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.clk{font-size:48px;font-weight:700;letter-spacing:2px}.per{font-size:21px;letter-spacing:3px;color:#d1002f;margin-top:5px;font-weight:700}
+.sub{display:grid;grid-template-columns:1fr 2fr 1fr;width:620px;margin:0 auto;padding:4px 0;background:#0b0f1a;border-radius:0 0 12px 12px;font-size:21px;letter-spacing:3px;text-align:center}
+.xl{color:#9aa3b2}
+[data-th=capsule] .row{border-radius:60px;box-shadow:0 14px 34px #000a,0 0 0 4px #fff}
+[data-th=capsule] .strip{display:none}[data-th=capsule] .logo{margin:0 18px}
+[data-th=capsule] .tour,[data-th=capsule] .sub{border-radius:30px}
+[data-th=diag] .row{background:none;box-shadow:none;gap:6px;overflow:visible}
+[data-th=diag] .team{background:linear-gradient(90deg,var(--c),#0b0e17 70%)}
+[data-th=diag] .team.a{background:linear-gradient(270deg,var(--c),#0b0e17 70%);clip-path:polygon(30px 0,100% 0,100% 100%,0 100%)}
+[data-th=diag] .team.h{clip-path:polygon(0 0,100% 0,calc(100% - 30px) 100%,0 100%)}
+[data-th=diag] .sc{background:#fff;color:#0b0e17}[data-th=diag] .strip{display:none}
+[data-th=neon] .row{background:#05060d;border:2px solid #7c3aed;box-shadow:0 0 30px #7c3aed88}
+[data-th=neon] .sc{background:none;text-shadow:0 0 18px var(--c),0 0 4px #fff}
+[data-th=neon] .team{border-bottom:5px solid var(--c)}
+[data-th=neon] .mid{background:#05060d;color:#fff}[data-th=neon] .per{color:#7dd3fc}
+.goal{position:absolute;left:0;right:0;top:330px;height:170px;display:flex;align-items:center;justify-content:center;gap:50px;background:linear-gradient(90deg,transparent,var(--c,#e11d48) 18%,var(--c,#e11d48) 82%,transparent);font-size:104px;font-weight:700;letter-spacing:6px;text-transform:uppercase;opacity:0}
+.goal.on{animation:gl 3.6s ease both}
+@keyframes gl{0%{opacity:0;transform:translateX(-500px) scaleY(.1)}12%{opacity:1;transform:none}85%{opacity:1;transform:none}100%{opacity:0;transform:translateX(500px)}}
+.ov{position:absolute;opacity:0;transform:translateY(50px) scale(.96);transition:opacity .6s,transform .6s cubic-bezier(.2,.9,.2,1);background:#0b0f1aea;border-radius:16px;padding:22px}
+.ov.show{opacity:1;transform:none}
+.form{left:50%;top:210px;width:1100px;margin-left:-550px}
+.fh{display:flex;justify-content:space-between;font-size:34px;margin-bottom:14px;text-transform:uppercase}
+.pitch{position:relative;height:560px;border:4px solid #ffffffa0;border-radius:8px}
+.pitch:after{content:"";position:absolute;left:50%;top:0;bottom:0;width:3px;background:#ffffff90}
+.dot{position:absolute;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:var(--c);border:3px solid #fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;z-index:1}
+.dot span{position:absolute;top:50px;font-size:17px;white-space:nowrap;text-shadow:0 1px 4px #000}
+.ov.show .dot{animation:dp .6s both;animation-delay:calc(var(--i)*45ms)}
+@keyframes dp{from{opacity:0;transform:translate(-50%,-50%) scale(0)}}
+.sched{right:60px;top:210px;width:760px}
+.sched h3{margin:0 0 12px;font-size:32px;letter-spacing:3px}
+.sr{display:grid;grid-template-columns:120px 1fr 190px;gap:12px;padding:12px 8px;border-top:1px solid #ffffff30;font-size:28px}
+.sr em{font-style:normal;color:#9aa3b2;text-align:right;font-size:22px}.sr b{color:#facc15}
+.ov.show .sr{animation:sr .6s both;animation-delay:calc(var(--i)*90ms)}
+@keyframes sr{from{opacity:0;transform:translateX(60px)}}
+</style></head>
+<body>
+<div id="outwrap" hidden><div id="stage" class="stage"></div></div>
+<div id="ctl" hidden>
+<div class="hero"><span class="eb">DIBUAT UNTUK STREAMER &amp; TIM SIARAN KECIL</span><h1>Tambahkan <em>Overlay Olahraga</em> ke live stream – dalam hitungan detik</h1><p><small>Bekerja bersama OBS, vMix, dan Streamlabs. Tanpa instalasi, cukup tempel link.</small></p><div><span class="chip ok" id="c1">Lokal: aktif</span><span class="chip" id="c2">Cloud: mengecek…</span></div></div>
+<div class="sg"><button data-a="sport:futsal" data-sp="futsal"><span>🥅</span>Futsal</button><button data-a="sport:bola" data-sp="bola"><span>⚽</span>Sepak Bola</button><button data-a="sport:mini" data-sp="mini"><span>🏟️</span>Mini Soccer</button><button data-a="sport:basket" data-sp="basket"><span>🏀</span>Basket</button><button data-a="sport:voli" data-sp="voli"><span>🏐</span>Bola Voli</button><button data-a="sport:karate" data-sp="karate"><span>🥋</span>Karate</button></div>
+<div class="steps"><div><b>1. Pilih overlay</b><br><small>Pilih cabang olahraga dan tema tampilan.</small></div><div><b>2. Atur pengaturan</b><br><small>Nama tim, warna, logo, formasi, dan jadwal.</small></div><div><b>3. Salin link stream</b><br><small>Tempel di OBS, vMix, atau Streamlabs.</small></div></div>
+<div class="card"><h2>Link output untuk OBS / vMix</h2>
+<div class="row2"><input id="lnk" readonly style="flex:1;min-width:200px"><button data-a="copy">Salin</button><a class="btn" id="opn" target="_blank">Buka output</a></div>
+<small>OBS: Sources → Browser, tempel URL, lebar 1920 × tinggi 1080. vMix: Add Input → Web Browser, 1920 × 1080. Latar otomatis transparan.</small></div>
+<div class="card"><h2>Pratinjau</h2><div class="pv" id="pv"><div class="stage" id="pvs"></div></div></div>
+<div class="grid" id="tp"></div>
+<div class="grid">
+<div class="card"><h2>Pertandingan</h2>
+<label>Cabang olahraga</label><select id="sport"></select>
+<label>Nama turnamen</label><input data-b="tour">
+<label>Tema scoreboard</label><select data-b="theme"><option value="classic">Classic</option><option value="capsule">Capsule</option><option value="diag">Crimson Diagonal</option><option value="neon">Neon Stripe</option></select>
+<label>Durasi (menit, 0 = tanpa jam)</label><input type="number" min="0" data-b="min">
+<label>Babak / set: <b id="perl"></b></label>
+<button data-a="per:-1">◀ Sebelumnya</button><button data-a="per:1">Berikutnya ▶</button>
+<label>Waktu tambahan (menit, sepak bola)</label><input type="number" min="0" data-b="add"><button data-a="unset">Batalkan set terakhir (voli)</button></div>
+<div class="card"><h2>Jam &amp; tampilan</h2>
+<div><button class="big" data-a="clk:start">▶ Mulai</button><button data-a="clk:pause">⏸ Jeda</button><button data-a="clk:reset">↺ Reset jam</button></div>
+<div class="row2"><input id="tset" placeholder="mm:ss" style="width:100px"><button data-a="clk:set">Atur jam</button></div>
+<label>Tampilkan di layar</label>
+<button data-a="ov:none" data-o="none">Scoreboard saja</button><button data-a="ov:form" data-o="form">Formasi</button><button data-a="ov:sched" data-o="sched">Jadwal</button>
+<div><button data-a="show" id="shb">Sembunyikan scoreboard</button><button data-a="swap">⇄ Tukar tim</button><button data-a="resetall">Reset skor</button></div></div>
+</div>
+<div class="card"><h2>Jadwal</h2><small>Satu baris per pertandingan: jam | tim A vs tim B | lokasi</small><textarea data-b="sched" style="min-height:110px"></textarea></div>
+</div>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const SP={
+futsal:{n:'Futsal',per:['1H','2H'],min:20,dir:'up',inc:[1],xl:'FOUL',gl:'GOAL',f:'2-2',gk:1,pc:'#1f7a3d'},
+bola:{n:'Sepak Bola',per:['1H','2H','ET1','ET2'],min:45,dir:'up',inc:[1],xl:'KARTU',gl:'GOAL',f:'4-3-3',gk:1,pc:'#1f7a3d'},
+mini:{n:'Mini Soccer',per:['1H','2H'],min:25,dir:'up',inc:[1],xl:'FOUL',gl:'GOAL',f:'3-2-1',gk:1,pc:'#1f7a3d'},
+basket:{n:'Basket',per:['Q1','Q2','Q3','Q4','OT'],min:10,dir:'down',inc:[1,2,3],xl:'FOUL',gl:'POIN',f:'1-2-2',pc:'#b9803f'},
+voli:{n:'Bola Voli',per:['SET 1','SET 2','SET 3','SET 4','SET 5'],min:0,inc:[1],xl:'SET',gl:'POIN',f:'3-3',pc:'#2f6fb5'},
+karate:{n:'Karate',per:['ROUND 1','ROUND 2','ROUND 3'],min:3,dir:'down',inc:[1,2,3],xl:'PENALTI',gl:'POIN',f:'1',pc:'#444b57'}};
+Object.assign(SP.futsal,{dir:'down',ct:[{k:'x',l:'FOUL',rs:1,w:5},{k:'y',l:'TO',rs:1,mx:1}]});
+Object.assign(SP.bola,{per:['1H','2H','ET1','ET2','PEN'],ct:[{k:'x',l:'🟨'},{k:'y',l:'🟥'}],off:[0,45,90,105,120]});
+Object.assign(SP.mini,{ct:[{k:'x',l:'FOUL',rs:1,w:5},{k:'y',l:'TO',rs:1,mx:1}]});
+Object.assign(SP.basket,{ct:[{k:'x',l:'FOUL',rs:1},{k:'y',l:'TO',mx:3}],pm:[10,10,10,10,5],il:['FT','2PT','3PT']});
+Object.assign(SP.voli,{ct:[{k:'x',l:'TO',rs:1,mx:2}]});
+Object.assign(SP.karate,{per:['KUMITE','ENCHO-SEN'],pm:[3,1],il:['YUKO','WAZA-ARI','IPPON'],ct:[{k:'x',l:'C',mx:5,v:n=>['','C1','C2','C3','HC','H'][n]},{k:'y',l:'SENSHU',mx:1,v:n=>n?'SENSHU':''}]});
+const def=()=>({ver:0,sets:[],srv:'',add:0,theme:'classic',sport:'futsal',tour:'Nama Turnamen 2026',min:20,per:1,show:true,ov:'none',
+h:{n:'Tim Home',c:'#e11d48',l:'',s:0,x:0,f:'2-2',p:''},a:{n:'Tim Away',c:'#1d4ed8',l:'',s:0,x:0,f:'2-2',p:''},
+clk:{ms:0,run:false,at:0},sched:'19:00 | Tim A vs Tim B | Lapangan 1\n20:00 | Tim C vs Tim D | Lapangan 1'});
+const mrg=p=>{const d=def();return Object.assign(d,p,{h:Object.assign(d.h,p.h),a:Object.assign(d.a,p.a),clk:Object.assign(d.clk,p.clk)})};
+const KEY='sb_state_v1',OUT=location.hash==='#output';
+addEventListener('hashchange',()=>location.reload());
+let S=def(),lastJ='',dbDoc=null,tm=null,ST,shown='';
+try{const j=localStorage.getItem(KEY);if(j)S=mrg(JSON.parse(j))}catch(e){}
+let bc=null;try{bc=new BroadcastChannel('sb')}catch(e){}
+function save(){const j=JSON.stringify(S);lastJ=j;try{localStorage.setItem(KEY,j)}catch(e){}if(bc)bc.postMessage(j);
+ if(dbDoc){clearTimeout(tm);tm=setTimeout(()=>dbDoc.set({s:j}).catch(()=>{}),250)}}
+function incoming(j){if(!j||j===lastJ)return;let p;try{p=JSON.parse(j)}catch(e){return}
+ if((p.ver||0)<S.ver)return;lastJ=j;S=mrg(p);refresh()}
+if(bc)bc.onmessage=e=>incoming(e.data);
+addEventListener('storage',e=>{if(e.key===KEY)incoming(e.newValue)});
+const chip=ok=>{const c=$('#c2');if(!c)return;c.className='chip'+(ok?' ok':'');c.textContent=ok?'Cloud: aktif':'Cloud: tidak tersedia'};
+if(window.claude)claude.use('db').then(db=>{if(!db)return chip(false);dbDoc=db.doc('scoreboard/main');
+ dbDoc.onSnapshot(sn=>{if(sn.exists)incoming(sn.data().s)},()=>{});chip(true)}).catch(()=>chip(false));else chip(false);
+function clk(){const m=+S.min;if(!m)return'';let ms=S.clk.ms+(S.clk.run?Date.now()-S.clk.at:0);
+ if(SP[S.sport].dir==='down')ms=Math.max(0,m*60000-ms);const s=Math.floor(ms/1000);
+ return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function pitch(){const sp=SP[S.sport];let h='';
+ ['h','a'].forEach(k=>{const t=S[k];let L=(t.f||'').split(/\D+/).filter(Boolean).map(Number);if(sp.gk)L=[1].concat(L);
+  const nm=(t.p||'').split('\n');let idx=0;
+  L.forEach((n,i)=>{const x0=L.length>1?i*(41/(L.length-1)):20,x=k==='h'?5+x0:95-x0;
+   for(let j=0;j<n;j++){h+=`<div class="dot" style="left:${x}%;top:${(j+1)/(n+1)*100}%;--i:${idx};--c:${esc(t.c)}"><b>${idx+1}</b><span>${esc(nm[idx]||'')}</span></div>`;idx++}})});
+ return h}
+function stage(root){
+ const T=k=>`<div class="team ${k}"><i class="strip"></i><div class="logo"></div><b class="nm"></b><div class="sc"><i class="n">0</i></div></div>`;
+ root.innerHTML=`<div class="sb"><div class="tour"></div><div class="row">${T('h')}<div class="mid"><div class="clk"></div><div class="per"></div></div>${T('a')}</div><div class="sub"><span class="hx"></span><span class="xl"></span><span class="ax"></span></div></div><div class="goal"><span class="gt"></span><span class="gn"></span></div><div class="ov form"><div class="fh"><b class="f1"></b><b class="f2"></b></div><div class="pitch"></div></div><div class="ov sched"><h3>JADWAL PERTANDINGAN</h3><div class="sl"></div></div>`;
+ const q=s=>root.querySelector(s);let prev=null,pk='',sk=null;
+ return{upd(){const sp=SP[S.sport];root.dataset.th=S.theme||'classic';
+  q('.tour').textContent=S.tour;q('.tour').style.display=S.tour?'':'none';
+  q('.sb').classList.toggle('out',!S.show);
+  ['h','a'].forEach(k=>{const t=S[k],e=q('.team.'+k),sc=e.querySelector('.sc'),lg=e.querySelector('.logo'),key=t.l||('~'+t.n);
+   e.style.setProperty('--c',t.c);e.querySelector('.nm').textContent=t.n;
+   if(lg.dataset.k!==key){lg.dataset.k=key;lg.innerHTML=t.l?`<img src="${esc(t.l)}">`:`<span>${esc(t.n.slice(0,3))}</span>`}
+   e.querySelector('.n').textContent=t.s;
+   if(prev&&prev[k]!==t.s){sc.classList.remove('pop');void sc.offsetWidth;sc.classList.add('pop');
+    if(t.s>prev[k]){const g=q('.goal');g.style.setProperty('--c',t.c);q('.gt').textContent=sp.gl;q('.gn').textContent=t.n;g.classList.remove('on');void g.offsetWidth;g.classList.add('on')}}});
+  prev={h:S.h.s,a:S.a.s};
+  q('.per').textContent=(sp.per[S.per-1]||'')+(S.sport==='bola'&&S.add>0?' +'+S.add:'');q('.xl').textContent=ctr();q('.hx').textContent=inf('h');q('.ax').textContent=inf('a');
+  q('.clk').style.display=+S.min?'':'none';
+  q('.form').classList.toggle('show',S.ov==='form');q('.sched').classList.toggle('show',S.ov==='sched');
+  const fk=JSON.stringify([S.sport,S.h.f,S.a.f,S.h.p,S.a.p,S.h.c,S.a.c,S.h.n,S.a.n]);
+  if(fk!==pk){pk=fk;q('.f1').textContent=S.h.n+' · '+S.h.f;q('.f2').textContent=S.a.f+' · '+S.a.n;q('.pitch').innerHTML=pitch();q('.pitch').style.background=sp.pc}
+  if(S.sched!==sk){sk=S.sched;q('.sl').innerHTML=S.sched.split('\n').filter(x=>x.trim()).map((r,i)=>{const c=r.split('|').map(x=>esc(x.trim()));return`<div class="sr" style="--i:${i}"><b>${c[0]||''}</b><span>${c[1]||''}</span><em>${c[2]||''}</em></div>`}).join('')}},
+  tk(){q('.clk').textContent=clk()}}}
+function fit(){if(OUT){$('#stage').style.transform=`scale(${Math.min(innerWidth/1920,innerHeight/1080)})`}
+ else{const s=$('#pv').clientWidth/1920;$('#pvs').style.transform=`scale(${s})`;$('#pv').style.height=1080*s+'px'}}
+const gp=p=>p.split('.').reduce((o,k)=>o[k],S);
+function sp_(p,v){const k=p.split('.');let o=S;while(k.length>1)o=o[k.shift()];o[k[0]]=v}
+function renderIncs(){const sp=SP[S.sport];shown=S.sport;
+ document.querySelectorAll('[data-incs]').forEach(e=>{const k=e.dataset.incs;e.innerHTML=`<button data-a="sc:${k}:-1">−1</button>`+sp.inc.map((n,i)=>`<button class="big" data-a="sc:${k}:+${n}">+${n}${sp.il?' '+sp.il[i]:''}</button>`).join('')});
+ document.querySelectorAll('[data-cts]').forEach(e=>{const k=e.dataset.cts;e.innerHTML=sp.ct.map(c=>`<div><small>${c.l}</small> <button data-a="c:${k}:${c.k}:-1">−</button><b data-cv="${k}.${c.k}">0</b><button data-a="c:${k}:${c.k}:+1">+</button></div>`).join('')+(S.sport==='voli'?`<button data-a="srv:${k}">🏐 Servis</button>`:'')})}
+function refresh(){ST.upd();ST.tk();if(OUT)return;if(shown!==S.sport)renderIncs();
+ document.querySelectorAll('[data-b]').forEach(e=>{if(e!==document.activeElement)e.value=gp(e.dataset.b)});
+ document.querySelectorAll('[data-sv]').forEach(e=>e.textContent=S[e.dataset.sv].s);
+ document.querySelectorAll('[data-cv]').forEach(e=>e.textContent=gp(e.dataset.cv)||0);
+ $('#sport').value=S.sport;document.querySelectorAll('[data-sp]').forEach(b=>b.classList.toggle('on',b.dataset.sp===S.sport));$('#perl').textContent=SP[S.sport].per[S.per-1];
+ document.querySelectorAll('[data-o]').forEach(b=>b.classList.toggle('on',b.dataset.o===S.ov));
+ $('#shb').textContent=S.show?'Sembunyikan scoreboard':'Tampilkan scoreboard'}
+function commit(){S.ver++;save();refresh()}
+function W(){const s=S.sets||[];return[s.filter(x=>x[0]>x[1]).length,s.filter(x=>x[1]>x[0]).length]}
+function rules(){const a=S.h.s,b=S.a.s;
+ if(S.sport==='voli'&&!W().some(n=>n>=3)){const t=S.per>=5?15:25;if((a>=t||b>=t)&&Math.abs(a-b)>=2){S.sets=S.sets||[];S.sets.push([a,b]);S.h.x=S.a.x=0;const w=W();if(w[0]<3&&w[1]<3){S.h.s=S.a.s=0;S.per=Math.min(5,S.per+1)}}}
+ if(S.sport==='karate'&&Math.abs(a-b)>=8&&S.clk.run){S.clk.ms+=Date.now()-S.clk.at;S.clk.run=false}}
+function inf(k){const sp=SP[S.sport],o=k==='h'?'a':'h';let r=sp.ct.map(c=>{const n=S[k][c.k]||0,t=c.v?c.v(n):`${c.l} ${n}`;return t+(c.w&&n>=c.w?' ⚠':'')}).filter(Boolean).join(' · ');
+ if(S.sport==='basket'&&(S[o].x||0)>=4)r='BONUS · '+r;if(S.sport==='voli'&&S.srv===k)r='🏐 '+r;return r}
+function ctr(){if(S.sport==='voli'){const w=W();return'SET '+w[0]+'–'+w[1]+(S.sets&&S.sets.length?'  ('+S.sets.map(x=>x.join('-')).join(' ')+')':'')}
+ if(S.sport==='karate'){const d=S.h.s-S.a.s;return Math.abs(d)>=8?(d>0?S.h.n:S.a.n)+' MENANG':'KUMITE'}
+ return SP[S.sport].n}
+function act(a){const [k,v,w,z]=a.split(':'),c=S.clk,now=Date.now();
+ if(k==='sc'){S[v].s=Math.max(0,S[v].s+ +w);if(+w>0&&S.sport==='voli')S.srv=v;rules()}
+ else if(k==='c'){const cc=SP[S.sport].ct.find(x=>x.k===w),n=Math.min(cc.mx||99,Math.max(0,(S[v][w]||0)+ +z));S[v][w]=n;if(S.sport==='karate'&&w==='y'&&n)S[v==='h'?'a':'h'].y=0}
+ else if(k==='srv')S.srv=v;
+ else if(k==='unset'){const l=(S.sets||[]).pop();if(l){S.h.s=l[0];S.a.s=l[1];S.per=Math.max(1,S.per-1)}}
+ else if(k==='per'){const sp=SP[S.sport];S.per=Math.min(sp.per.length,Math.max(1,S.per+ +v));S.clk={ms:sp.off?sp.off[S.per-1]*60000:0,run:false,at:0};S.add=0;if(sp.pm)S.min=sp.pm[S.per-1];sp.ct.forEach(cc=>{if(cc.rs)S.h[cc.k]=S.a[cc.k]=0})}
+ else if(k==='ov')S.ov=v;
+ else if(k==='show')S.show=!S.show;
+ else if(k==='swap'){const t=S.h;S.h=S.a;S.a=t}
+ else if(k==='resetall'){S.h.s=S.a.s=S.h.x=S.a.x=S.h.y=S.a.y=0;S.sets=[];S.srv='';S.per=1;S.add=0}
+ else if(k==='logo')S[w].l='';
+ else if(k==='clk'){
+  if(v==='start'&&!c.run){c.run=true;c.at=now}
+  else if(v==='pause'&&c.run){c.ms+=now-c.at;c.run=false}
+  else if(v==='reset'){c.ms=0;c.run=false}
+  else if(v==='set'){const p=$('#tset').value.split(':').map(Number),s=p[0]*60+(p[1]||0);if(isNaN(s))return;
+   c.ms=SP[S.sport].dir==='down'?Math.max(0,S.min*60000-s*1000):s*1000;if(c.run)c.at=now}}
+ else if(k==='sport'){const sp=SP[v];S.sport=v;S.per=1;S.min=sp.pm?sp.pm[0]:sp.min;S.sets=[];S.srv='';S.add=0;S.h.s=S.a.s=S.h.x=S.a.x=S.h.y=S.a.y=0;if(v==='karate'){S.h.n='AKA';S.a.n='AO';S.h.c='#dc2626';S.a.c='#2563eb'}S.clk={ms:0,run:false,at:0};S.h.f=S.a.f=sp.f}
+ else if(k==='copy'){const l=$('#lnk');l.select();try{navigator.clipboard.writeText(l.value)}catch(e){}return}
+ commit()}
+if(OUT){document.body.className='out';$('#outwrap').hidden=false;ST=stage($('#stage'))}
+else{$('#ctl').hidden=false;ST=stage($('#pvs'));
+ $('#sport').innerHTML=Object.keys(SP).map(k=>`<option value="${k}">${SP[k].n}</option>`).join('');
+ $('#tp').innerHTML=['h','a'].map(k=>`<div class="card"><h2>${k==='h'?'Tim Home':'Tim Away'}</h2>
+ <label>Nama tim</label><input data-b="${k}.n"><div class="row2"><div style="flex:1"><label>Warna</label><input type="color" data-b="${k}.c"></div><div style="flex:2"><label>Logo</label><input type="file" accept="image/*" data-logo="${k}"></div></div>
+ <button data-a="logo:x:${k}">Hapus logo</button>
+ <div class="bs" data-sv="${k}">0</div><div style="text-align:center" data-incs="${k}"></div>
+ <div style="text-align:center" data-cts="${k}"></div>
+ <label>Formasi (contoh 4-3-3)</label><input data-b="${k}.f">
+ <label>Nama pemain (satu per baris, kiper dulu)</label><textarea data-b="${k}.p"></textarea></div>`).join('');
+ const u=location.href.replace(/#.*$/,'')+'#output';$('#lnk').value=u;$('#opn').href=u;
+ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b)act(b.dataset.a)});
+ document.addEventListener('input',e=>{const t=e.target;if(t.dataset.b){sp_(t.dataset.b,t.type==='number'?+t.value:t.value);commit()}});
+ $('#sport').onchange=e=>act('sport:'+e.target.value);
+ document.addEventListener('change',e=>{const t=e.target,k=t.dataset.logo;if(!k||!t.files[0])return;const r=new FileReader();
+  r.onload=()=>{const im=new Image();im.onload=()=>{const m=Math.min(1,200/Math.max(im.width,im.height)),c=document.createElement('canvas');
+   c.width=im.width*m;c.height=im.height*m;c.getContext('2d').drawImage(im,0,0,c.width,c.height);S[k].l=c.toDataURL('image/png');commit()};im.src=r.result};r.readAsDataURL(t.files[0])})}
+addEventListener('resize',fit);fit();refresh();
+setInterval(()=>{ST.tk();if(!OUT&&S.clk.run&&SP[S.sport].dir==='down'&&+S.min&&S.clk.ms+Date.now()-S.clk.at>=S.min*60000)act('clk:pause')},200);
+</script></body></html>
